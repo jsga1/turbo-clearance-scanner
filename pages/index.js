@@ -1,4 +1,9 @@
+import { useState } from 'react';
+
 export default function Home() {
+  const [search, setSearch] = useState('');
+  const [message, setMessage] = useState('');
+
   const deals = [
     {
       title: 'Husky Tool Bag',
@@ -16,6 +21,14 @@ export default function Home() {
     },
   ];
 
+  const filteredDeals = deals.filter((deal) =>
+    deal.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const fakeScanner = () => {
+    setMessage('📷 Scanner opened... (demo mode)');
+  };
+
   return (
     <div
       style={{
@@ -26,161 +39,93 @@ export default function Home() {
         fontFamily: 'Arial, sans-serif',
       }}
     >
-      <div
+      <h1
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          color: '#32ff7e',
+          fontSize: '42px',
+          fontWeight: 'bold',
         }}
       >
-        <div>
-          <h1
-            style={{
-              color: '#32ff7e',
-              fontSize: '42px',
-              fontWeight: 'bold',
-              marginBottom: '4px',
-              marginTop: '0',
-            }}
-          >
-            TURBO CLEARANCE
-          </h1>
-          <p style={{ color: '#999', margin: '0' }}>
-            UPC Scanner + Clearance Finder
-          </p>
-        </div>
-        <div
-          style={{
-            background: '#111',
-            border: '1px solid #32ff7e',
-            borderRadius: '16px',
-            padding: '10px 16px',
-            color: '#32ff7e',
-            fontWeight: 'bold',
-          }}
-        >
-          LIVE
-        </div>
-      </div>
-      <div
+        TURBO CLEARANCE
+      </h1>
+      <p style={{ color: '#999' }}>
+        UPC Scanner + Clearance Finder
+      </p>
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search product"
         style={{
-          marginTop: '24px',
-          background: '#101010',
-          borderRadius: '18px',
-          padding: '18px',
-          border: '1px solid #1f1f1f',
+          width: '100%',
+          padding: '16px',
+          marginTop: '20px',
+          borderRadius: '12px',
+          border: '1px solid #32ff7e',
+          background: '#111',
+          color: 'white',
+          fontSize: '16px',
+        }}
+      />
+      <button
+        onClick={fakeScanner}
+        style={{
+          width: '100%',
+          marginTop: '16px',
+          padding: '16px',
+          borderRadius: '12px',
+          border: 'none',
+          background: '#32ff7e',
+          color: '#000',
+          fontWeight: 'bold',
+          fontSize: '18px',
         }}
       >
-        <input
-          placeholder="Search UPC, SKU or Product"
+        Scan UPC
+      </button>
+      {message && (
+        <p
           style={{
-            width: '100%',
-            padding: '16px',
-            borderRadius: '14px',
-            border: '1px solid #32ff7e',
-            background: '#050505',
-            color: 'white',
-            fontSize: '16px',
-            outline: 'none',
-          }}
-        />
-        <div
-          style={{
-            display: 'flex',
-            gap: '12px',
             marginTop: '14px',
+            color: '#32ff7e',
           }}
         >
-          <button
-            style={{
-              flex: 1,
-              background: '#32ff7e',
-              color: '#000',
-              border: 'none',
-              borderRadius: '14px',
-              padding: '14px',
-              fontWeight: 'bold',
-              fontSize: '16px',
-            }}
-          >
-            Scan UPC
-          </button>
-          <button
-            style={{
-              flex: 1,
-              background: '#111',
-              color: '#32ff7e',
-              border: '1px solid #32ff7e',
-              borderRadius: '14px',
-              padding: '14px',
-              fontWeight: 'bold',
-              fontSize: '16px',
-            }}
-          >
-            ZIP 60609
-          </button>
-        </div>
-      </div>
+          {message}
+        </p>
+      )}
       <h2
         style={{
-          marginTop: '32px',
+          marginTop: '30px',
           color: '#32ff7e',
-          fontSize: '24px',
         }}
       >
-        Hot Clearance Deals
+        Hot Deals
       </h2>
-      {deals.map((deal, index) => (
+      {filteredDeals.map((deal, index) => (
         <div
           key={index}
           style={{
+            background: '#111',
             marginTop: '18px',
-            background: '#101010',
-            borderRadius: '20px',
             padding: '20px',
+            borderRadius: '18px',
             border: '1px solid #32ff7e',
-            boxShadow: '0 0 20px rgba(50,255,126,0.15)',
           }}
         >
-          <div
+          <h3>{deal.title}</h3>
+          <p>MSRP: {deal.msrp}</p>
+          <p
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              color: '#32ff7e',
+              fontSize: '28px',
+              fontWeight: 'bold',
             }}
           >
-            <div>
-              <h3 style={{ margin: 0 }}>{deal.title}</h3>
-              <p style={{ color: '#888', marginTop: '6px', marginBottom: '0' }}>
-                {deal.store}
-              </p>
-            </div>
-            <div
-              style={{
-                background: '#32ff7e',
-                color: '#000',
-                padding: '8px 12px',
-                borderRadius: '12px',
-                fontWeight: 'bold',
-              }}
-            >
-              74% OFF
-            </div>
-          </div>
-          <div style={{ marginTop: '18px' }}>
-            <p style={{ color: '#777', margin: '0' }}>MSRP: {deal.msrp}</p>
-            <p
-              style={{
-                color: '#32ff7e',
-                fontSize: '34px',
-                fontWeight: 'bold',
-                margin: '10px 0',
-              }}
-            >
-              {deal.clearance}
-            </p>
-            <p style={{ color: '#bbb', margin: '0' }}>{deal.aisle}</p>
-          </div>
+            {deal.clearance}
+          </p>
+          <p>{deal.aisle}</p>
+          <p style={{ color: '#888' }}>
+            {deal.store}
+          </p>
         </div>
       ))}
     </div>
